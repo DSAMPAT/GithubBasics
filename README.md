@@ -67,4 +67,46 @@ To view the config file
 
 	$ cat .git/config
 	
+Heroku 
+DEV Cloning
+	heroku git:clone -a app-staging
+Prod Cloning
+	heroku git:clone -a app-production
+
+To create a new App
+	cd to the copy of an app folder or a new folder
+
+Open Terminal
+	cd test
+	heroku create
+
+Deploy / Update
+
+Make changes via Text Editor / Notepad / Sublime Text
+
+Commit the changes to save all modifications
+	git commit –a –m “Change Desc”
+	git push heroku master
+
+Check that you are connected to the correct Heroku App Environment
+	git remote -v
+		heroku git:remote –a newappname
+			heroku git:remote –a randomname-randomname-randomnumber
+			heroku git:remote –a app-staging
+	heroku run rake db:migrate --app app-staging
+
+Commit all changes and upload to app
+	git push heroku master				//Publish Master Branch
+	git push heroku develop:master -f --progress	//Publish Develop Branch
+
+Initilise site
+	heroku rake db:seed 				//This will create the initial site parameters e.g. users
+
+Add Tags to Commits
+	git -c diff.mnemonicprefix=false -c core.quotepath=false tag -a -m "" v1.3.1
+	git -c diff.mnemonicprefix=false -c core.quotepath=false push -v origin refs/tags/v1.3.1
+
+Tag older commits
+	git tag -a v1.2 9fceb02 -m "Message here"
+	git push --tags origin master
 
