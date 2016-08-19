@@ -188,5 +188,86 @@ Steps
 		$ heroku rake db:migrate
 
 	or
-	
+
 		$ heroku run rake
+
+DATABASE MANAGEMENT
+-------------------
+
+On your local copy,
+
+Load the backup DB
+
+	$ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d App_development production_backup.dump
+
+Reset the DB
+
+	$ bundle exec rake db:migrate:reset
+	$ bundle exec rake db:migrate
+
+CONNECTION INFO
+---------------
+
+In order to view the repo remote URL
+
+	$ git remote -v
+
+remove staging url
+
+	$ git remote rm heroku
+
+add production url
+
+	$ heroku git:remote -a bloom-wood-9999
+
+show the config and info of the existing app
+
+	$ heroku apps:info --app bloom-wood-9999
+
+tail the logs
+
+	$ heroku logs -t -n 1500 --app bloom-wood-9999
+
+restart the production server
+
+	$ heroku restart -a bloom-wood-9999
+
+open the app from terminal to browser.
+	$ heroku open --app bloom-wood-9999
+
+use “git push heroku master -- force” if you have fast forward issues
+
+	$ git push heroku master -- force
+	$ git push heroku develop:master -f --progress
+
+LOCAL SERVER
+------------
+
+After making sure your server side firewall is open to the incoming connection on high ports (this is normally true and the default port is 3000, so you probably don't have to do anything) you must also start the server like this:
+
+	$ rails server -b 0.0.0.0
+
+which binds it to the universal address. It binds to localhost by default.
+
+Using this method you don't have to bind to port 80, but you can like this:
+
+	$ rails server -b 0.0.0.0 -p 80
+
+(If you're using rvm then you may need to use rvmsudo)
+
+To make this change more permanent edit your config/boot.rb and add this:
+
+	$ require 'rails/commands/server'
+	$ module Rails
+	$   class Server
+	$     def default_options
+	$       super.merge(Host:  '0.0.0.0', Port: 3000)
+	$     end
+	$   end
+	$ end
+
+Then you should only have to use rails s
+
+Run local rails server to be access from network
+
+	$ rails s -b 192.168.0.89 -p 3000
